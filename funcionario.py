@@ -1,19 +1,39 @@
+import mysql.connector
+
+
 def cadastrar_funcionario(conexao, indicador):
 
-    idfuncionario = input("Matricula: ")
+    while True:
+        try:
+            idfuncionario = input("Matricula: ")
+            indicador.execute(f"INSERT INTO funcionario (idfuncionario) VALUES ('{idfuncionario}')")
+            conexao.commit()
+            break
+        except mysql.connector.IntegrityError:
+            print("Funcionario já cadastrado")
+
     nome = input("Nome: ")
     senha = input("Senha: ")
     telefone = input("Telefone: ")
-    email = input("E-mail: ")
+
+    print(idfuncionario)
+
+    while True:
+        try:
+            email = input("E-mail: ")
+            indicador.execute(f"UPDATE funcionario SET email = '{email}' WHERE idfuncionario = '{idfuncionario}'")
+            conexao.commit()
+            break
+        except mysql.connector.IntegrityError:
+            print("Email já cadastrado no sistema")
+
     cargo = input("Cargo: ")
     setor = input("Setor: ")
 
-    indicador.execute("INSERT INTO funcionario (idfuncionario, nome, senha, telefone, email, cargo, setor) "
-                      f"VALUES ('{idfuncionario}', '{nome}', '{senha}', '{telefone}', '{email}', '{cargo}', '{setor}')")
+    indicador.execute(f"UPDATE funcionario SET nome = '{nome}', senha = '{senha}', telefone = '{telefone}', "
+                      f"cargo = '{cargo}', setor = '{setor}' "
+                      f"WHERE idfuncionario = '{idfuncionario}'")
     conexao.commit()
-
-    print("Cliente cadastrado com sucesso")
-    continuar = input("Precione qualquer tecla para continuar...")
 
 
 def login(indicador):
