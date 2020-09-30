@@ -1,12 +1,30 @@
 import random
+import mysql.connector
 
 
 def cadastar_cliente(conexao, indicador):
 
-    idcpf_cnpj = input("CPF/CNPJ: ")
+    while True:
+        try:
+            idcpf_cnpj = input("CPF/CNPJ: ")
+            indicador.execute(f"INSERT INTO cliente (idcpf_cnpj) VALUES ('{idcpf_cnpj}')")
+            conexao.commit()
+            break
+        except mysql.connector.IntegrityError:
+            print("Cliente já cadastrado.")
+    
     nome = input("Nome: ")
     senha = input("Senha: ")
-    email = input("E-mail: ")
+
+    while True:
+        try:
+            email = input("E-mail: ")
+            indicador.execute(f"UPDATE cliente SET email = '{email}' WHERE idcpf_cnpj = {idcpf_cnpj}")
+            conexao.commit()
+            break
+        except mysql.connector.IntegrityError:
+            print("E-mail já cadastrado.")
+    
     data_nascimento = input("Data de Nascimento: ")
     telefone = input("Telefone: ")
     cep = input("Cep: ")
@@ -14,14 +32,13 @@ def cadastar_cliente(conexao, indicador):
     endereco = input("Endereço: ")
     bairro = input("Bairro: ")
 
-    indicador.execute("INSERT INTO cliente (idcpf_cnpj, nome, senha, email, data_nascimento, "
-                      f"telefone, cep, cidade, endereco, bairro) VALUES ('{idcpf_cnpj}', '{nome}', "
-                      f"'{senha}', '{email}', '{data_nascimento}', '{telefone}', '{cep}', '{cidade}', "
-                      f"'{endereco}', '{bairro}')")
+    indicador.execute(f"UPDATE cliente SET nome = '{nome}', senha = '{senha}', data_nascimento = '{data_nascimento}', "
+                      f"telefone = '{telefone}', cep = '{cep}', cidade = '{cidade}', endereco = '{endereco}', bairro = '{bairro}' "
+                      f"WHERE idcpg_cnpj = {idcpf_cnpj}")
     conexao.commit()
 
     print("Cliente cadastrado com sucesso")
-    continuar = input("Precione qualquer tecla para continuar...")
+    input("Precione qualquer tecla para continuar...")
 
 
 def login(indicador):
