@@ -34,7 +34,7 @@ def cadastar_cliente(conexao, indicador):
 
     indicador.execute(f"UPDATE cliente SET nome = '{nome}', senha = '{senha}', data_nascimento = '{data_nascimento}', "
                       f"telefone = '{telefone}', cep = '{cep}', cidade = '{cidade}', endereco = '{endereco}', bairro = '{bairro}' "
-                      f"WHERE idcpg_cnpj = {idcpf_cnpj}")
+                      f"WHERE idcpf_cnpj = {idcpf_cnpj}")
     conexao.commit()
 
     print("Cliente cadastrado com sucesso")
