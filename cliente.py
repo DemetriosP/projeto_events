@@ -1,12 +1,27 @@
 import random
 import mysql.connector
+import verificacao
 
 
 def cadastar_cliente(conexao, indicador):
 
     while True:
+        opcao = input("1 - Pessoa Física\n2 - Pessoa Jurídica\n")
+
+        if opcao == "1" or opcao == "2":
+            break
+
+        print("Opção inválida, por favor informe uma opção valida")
+
+    while True:
+
         try:
-            idcpf_cnpj = input("CPF/CNPJ: ")
+
+            if opcao == "1":
+                idcpf_cnpj = verificacao.cpf()
+            else:
+                idcpf_cnpj = verificacao.cnpj()
+
             indicador.execute(f"INSERT INTO cliente (idcpf_cnpj) VALUES ('{idcpf_cnpj}')")
             conexao.commit()
             break
@@ -19,7 +34,7 @@ def cadastar_cliente(conexao, indicador):
     while True:
         try:
             email = input("E-mail: ")
-            indicador.execute(f"UPDATE cliente SET email = '{email}' WHERE idcpf_cnpj = {idcpf_cnpj}")
+            indicador.execute(f"UPDATE cliente SET email = '{email}' WHERE idcpf_cnpj = '{idcpf_cnpj}'")
             conexao.commit()
             break
         except mysql.connector.IntegrityError:
@@ -34,7 +49,7 @@ def cadastar_cliente(conexao, indicador):
 
     indicador.execute(f"UPDATE cliente SET nome = '{nome}', senha = '{senha}', data_nascimento = '{data_nascimento}', "
                       f"telefone = '{telefone}', cep = '{cep}', cidade = '{cidade}', endereco = '{endereco}', bairro = '{bairro}' "
-                      f"WHERE idcpf_cnpj = {idcpf_cnpj}")
+                      f"WHERE idcpf_cnpj = '{idcpf_cnpj}'")
     conexao.commit()
 
     print("Cliente cadastrado com sucesso")
